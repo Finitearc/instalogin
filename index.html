@@ -2,224 +2,212 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login • Demo (Instagram‑style)</title>
-  <meta name="color-scheme" content="light dark" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign in • YourApp</title>
   <style>
-    :root {
+    :root{
+      /* Tweak these to tune spacing & type to your taste */
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       --bg: #fafafa;
-      --card: #ffffff;
+      --card: #fff;
+      --muted: #737373;
       --text: #262626;
-      --muted: #8e8e8e;
       --line: #dbdbdb;
-      --accent: #0095f6;
-      --accent-press: #1877f2;
-      --error: #dc2626;
-      --ok: #10b981;
+      --primary: #3897f0;      /* accessible blue */
+      --primary-hover:#2682da;
+      --radius: 8px;
+      --base: 14px;            /* base font size */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --maxw: 350px;           /* card width target */
     }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f1113;
-        --card: #15171a;
-        --text: #e4e6eb;
-        --muted: #a3a3a3;
-        --line: #2a2d31;
-        --accent: #0095f6;
-        --accent-press: #77a7ff;
-      }
-    }
-
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: var(--font);
+      font-size: var(--base);
       background: var(--bg);
       color: var(--text);
-      display: grid;
-      place-items: center;
-      padding: 24px;
+      display:grid;
+      place-items:center;
     }
-    .wrap { width: 100%; max-width: 950px; display: grid; gap: 24px; grid-template-columns: 1fr; align-items: center; }
-    @media (min-width: 900px) { .wrap { grid-template-columns: 1.2fr 1fr; } }
+    .col{
+      display:grid;
+      gap: var(--space-3);
+      width:100%;
+      max-width: var(--maxw);
+      padding: var(--space-6) var(--space-4);
+    }
+    .card{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: var(--space-6) var(--space-5);
+    }
+    .brand{
+      display:grid;
+      justify-items:center;
+      margin-bottom: var(--space-5);
+    }
+    .brand h1{
+      margin:0;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing:.2px;
+    }
+    form{display:grid; gap: var(--space-3);}
+    .field{
+      display:grid; gap: var(--space-2);
+    }
+    label{
+      position:absolute;
+      width:1px;height:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);
+    }
+    .input{
+      border:1px solid var(--line);
+      background:#fafafa;
+      border-radius: 4px;
+      padding: 10px 12px;
+      display:block;
+      width:100%;
+      outline:none;
+      color:var(--text);
+    }
+    .input:focus{border-color:#bdbdbd; background:#fff;}
+    .btn{
+      border:none;
+      background: var(--primary);
+      color:#fff;
+      font-weight:600;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor:pointer;
+    }
+    .btn:hover{ background: var(--primary-hover); }
+    .btn:disabled{ opacity:.45; cursor:not-allowed; }
 
-    /* Left visual panel (purely decorative) */
-    .visual { display: none; }
-    @media (min-width: 900px) {
-      .visual { display: block; position: relative; height: 580px; border-radius: 24px; border: 1px solid var(--line); background:
-        radial-gradient(900px 540px at 0% 0%, #e0f2ff 0%, transparent 60%),
-        radial-gradient(700px 420px at 100% 100%, #ffe6f2 0%, transparent 55%),
-        linear-gradient(180deg, #f7f7f7, #f0f0f0); box-shadow: 0 12px 34px rgba(0,0,0,.08);} 
-      .visual::after { content:""; position:absolute; inset:40px; border-radius:20px; background: var(--card); border:1px solid var(--line); box-shadow: 0 6px 18px rgba(0,0,0,.06);} 
-      .visual-badge { position:absolute; left:60px; top:60px; z-index:2; background: var(--card); border:1px solid var(--line); padding:10px 14px; border-radius:999px; font-weight:700; font-size:14px; letter-spacing:.2px; box-shadow: 0 8px 24px rgba(0,0,0,.08);} 
+    .row{
+      display:flex; align-items:center; justify-content:space-between;
+      margin-top: var(--space-2);
+    }
+    .link{
+      color: #00376b; text-decoration:none; font-weight:600;
+    }
+    .link:hover{ text-decoration:underline; }
+
+    .or{
+      display:grid; grid-template-columns: 1fr auto 1fr; align-items:center; gap: var(--space-3);
+      margin: var(--space-2) 0;
+      color: var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.4px; font-size:12px;
+    }
+    .or::before, .or::after{
+      content:""; height:1px; background: var(--line);
     }
 
-    /* Card */
-    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; width: 100%; max-width: 360px; margin: 0 auto; padding: 32px 32px 28px; box-shadow: 0 6px 18px rgba(0,0,0,.04); }
-    .brand { text-align: center; font-weight: 700; font-size: 28px; letter-spacing: .5px; margin: 0 0 18px; }
-    .demo-banner { display:flex; align-items:center; gap:8px; background:#fff3cd; color:#7a5d00; border:1px solid rgba(0,0,0,.06); border-radius: 10px; padding:10px 12px; font-size:12px; margin-bottom:12px; }
-    @media (prefers-color-scheme: dark) { .demo-banner { background: rgba(255,255,255,.08); color:#f0f2f5; } }
+    .alt{
+      display:grid; gap: var(--space-3);
+      justify-items:center;
+    }
+    .alt .social{
+      background:none; border:none; color:#385185; font-weight:600; cursor:pointer;
+    }
 
-    .field { margin-top: 10px; }
-    .label { font-size: 12px; color: var(--muted); margin-bottom: 6px; display: block; }
-    .input { display:flex; align-items:center; border:1px solid var(--line); border-radius:12px; background: #fff; padding: 0 10px; }
-    @media (prefers-color-scheme: dark) { .input { background: var(--card); } }
-    .input input { appearance: none; border: 0; outline: none; background: transparent; color: var(--text); font-size: 14px; padding: 12px 8px; width: 100%; }
-    .toggle { cursor: pointer; user-select: none; font-size: 12px; color: var(--muted); padding: 0 4px; }
-    .msg { font-size: 12px; margin-top: 6px; min-height: 16px; }
-    .msg.error { color: var(--error); }
-    .msg.ok { color: var(--ok); }
+    .subcard{
+      text-align:center;
+      color: var(--text);
+    }
+    .subcard a{ color:#0095f6; text-decoration:none; font-weight:600; }
+    .subcard a:hover{ text-decoration:underline; }
 
-    .btn { margin-top: 14px; width: 100%; border: 0; border-radius: 12px; background: var(--accent); color: white; font-weight: 600; padding: 12px 14px; font-size: 14px; cursor: pointer; opacity: 0.9; }
-    .btn:disabled { opacity: .5; cursor: not-allowed; }
-    .btn:active { transform: translateY(1px); background: var(--accent-press); }
-
-    .divider { display:grid; grid-template-columns: 1fr auto 1fr; align-items:center; gap:8px; color:var(--muted); font-size:12px; margin:16px 0; }
-    .divider::before, .divider::after { content:""; height:1px; background: var(--line); display:block; }
-
-    .with-facebook { width: 100%; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: #385185; font-weight: 600; padding: 10px 14px; font-size: 14px; cursor: pointer; }
-    @media (prefers-color-scheme: dark) { .with-facebook { background: var(--card); } }
-
-    .signup { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; text-align: center; font-size: 14px; }
-    .store-badges { display:flex; gap:10px; justify-content:center; margin-top:18px; }
-    .badge { border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-size:12px; color:var(--muted); background:#fff; }
-    @media (prefers-color-scheme: dark) { .badge { background: var(--card); } }
-
-    footer { margin-top: 30px; text-align: center; color: var(--muted); font-size: 12px; }
+    footer{
+      display:grid; gap: var(--space-2);
+      margin-top: var(--space-6);
+      color: var(--muted);
+      font-size: 12px;
+      text-align:center;
+    }
+    .footer-links{
+      display:flex; flex-wrap:wrap; gap: 10px; justify-content:center;
+    }
+    .footer-links a{ color: var(--muted); text-decoration:none; }
+    .footer-links a:hover{ text-decoration:underline; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="visual"><div class="visual-badge">Demo Preview</div></div>
-
-    <main>
-      <section class="card" aria-label="Login card">
-        <h1 class="brand" aria-label="Brand">InstaClone</h1>
-        <div class="demo-banner" role="note">DEMO ONLY — do not enter real usernames or passwords. This page is offline and makes no network requests.</div>
-
-        <form id="loginForm" aria-describedby="formMsg" novalidate>
-          <div class="field">
-            <label class="label" for="username">Phone number, username, or email</label>
-            <div class="input"><input id="username" name="username" autocomplete="off" required placeholder="username" /></div>
-            <div class="msg" id="uMsg" aria-live="polite"></div>
-          </div>
-          <div class="field">
-            <label class="label" for="password">Password</label>
-            <div class="input">
-              <input id="password" name="password" type="password" required minlength="6" placeholder="••••••••" />
-              <span id="togglePw" class="toggle" aria-label="Show or hide password" role="button">Show</span>
-            </div>
-            <div class="msg" id="pMsg" aria-live="polite"></div>
-          </div>
-
-          <button class="btn" id="submitBtn" type="submit" disabled>Log in</button>
-          <div class="msg" id="formMsg" aria-live="polite" style="text-align:center;"></div>
-        </form>
-
-        <div class="divider">OR</div>
-        <button class="with-facebook" type="button">Continue with Facebook (demo)</button>
-        <div class="signup">Don't have an account? <a href="#" onclick="event.preventDefault(); alert('Demo: sign up');">Sign up</a></div>
-        <div class="store-badges">
-          <div class="badge">Get it on App Store</div>
-          <div class="badge">Get it on Google Play</div>
-        </div>
-        <footer>© 2025 Demo UI. Not affiliated with Instagram.        <h3 style="text-align:center; font-size:12px; color:var(--muted); margin:18px 0 8px; letter-spacing:.2px;">Get the app</h3>
-        <div class="store-badges">
-          <div class="badge">App Store</div>
-          <div class="badge">Google Play</div>
-        </div>
-        <footer>© 2025 Demo UI. Not affiliated with Instagram.</footer>
-      </section>
-    </main>
-
-    <!-- Footer nav like the real page -->
-    <nav aria-label="Footer" style="margin-top:28px; text-align:center;">
-      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:12px; justify-content:center; color:var(--muted); font-size:12px;">
-        <li><a href="#" onclick="event.preventDefault();" style="color:inherit;">About</a></li>
-        <li><a href="#" onclick="event.preventDefault();" style="color:inherit;">Help</a></li>
-        <li><a href="#" onclick="event.preventDefault();" style="color:inherit;">Press</a></li>
-        <li><a href="#" onclick="event.preventDefault();" style="color:inherit;">API</a></li>
-        <li><a href="#" onclick="event.preventDefault();" style="color:inherit;">Jobs</a></li>
-        <li><a href="#" onclick="event.preventDefault();" style="color:inherit;">Privacy</a></li>
-        <li><a href="#" onclick="event.preventDefault();" style="color:inherit;">Terms</a></li>
-        <li><a href="#" onclick="event.preventDefault();" style="color:inherit;">Locations</a></li>
-        <li><a href="#" onclick="event.preventDefault();" style="color:inherit;">Contact Uploading & Non-Users</a></li>
-        <li><a href="#" onclick="event.preventDefault();" style="color:inherit;">Meta Verified</a></li>
-      </ul>
-      <div style="margin-top:10px; color:var(--muted); font-size:12px; display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap;">
-        <label for="lang" class="visually-hidden" style="position:absolute; left:-9999px;">Language</label>
-        <select id="lang" aria-label="Language" style="border:1px solid var(--line); border-radius:8px; padding:6px 10px; background:var(--card); color:var(--muted);">
-          <option>English</option>
-          <option>Español</option>
-          <option>Français</option>
-          <option>Deutsch</option>
-          <option>Português (Brasil)</option>
-          <option>Italiano</option>
-        </select>
-        <span>© 2025 InstaClone Demo</span>
+  <div class="col" role="main" aria-labelledby="title">
+    <section class="card" aria-label="Sign in">
+      <div class="brand">
+        <h1 id="title">YourApp</h1>
       </div>
-    </nav>
+
+      <form id="login" novalidate>
+        <div class="field">
+          <label for="id">Email or username</label>
+          <input class="input" id="id" name="id" type="text" autocomplete="username" placeholder="Email or username" required minlength="3">
+        </div>
+
+        <div class="field">
+          <label for="pw">Password</label>
+          <input class="input" id="pw" name="pw" type="password" autocomplete="current-password" placeholder="Password" required minlength="8">
+        </div>
+
+        <button class="btn" id="submit" type="submit" disabled>Log in</button>
+
+        <div class="or">or</div>
+
+        <div class="alt">
+          <button type="button" class="social">Continue with Provider</button>
+          <a class="link" href="#" rel="nofollow">Forgot password?</a>
+        </div>
+      </form>
+    </section>
+
+    <section class="card subcard" aria-label="Create account">
+      Don’t have an account? <a href="#">Sign up</a>
+    </section>
+
+    <footer aria-label="Footer links">
+      <nav class="footer-links">
+        <a href="#">About</a>
+        <a href="#">Help</a>
+        <a href="#">API</a>
+        <a href="#">Jobs</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Locations</a>
+        <a href="#">Language</a>
+      </nav>
+      <div>© <span id="year"></span> YourApp</div>
+    </footer>
   </div>
 
   <script>
-    // Elements
-    const form = document.getElementById('loginForm');
-    const u = document.getElementById('username');
-    const p = document.getElementById('password');
-    const uMsg = document.getElementById('uMsg');
-    const pMsg = document.getElementById('pMsg');
-    const formMsg = document.getElementById('formMsg');
-    const submitBtn = document.getElementById('submitBtn');
-    const togglePw = document.getElementById('togglePw');
+    (function(){
+      const id = document.getElementById('id');
+      const pw = document.getElementById('pw');
+      const btn = document.getElementById('submit');
+      const form = document.getElementById('login');
+      const year = document.getElementById('year');
+      year.textContent = new Date().getFullYear();
 
-    // Helpers
-    const ok = (el, msgEl, text="") => { el.setAttribute('aria-invalid', 'false'); msgEl.textContent = text; msgEl.className = 'msg ok'; };
-    const err = (el, msgEl, text) => { el.setAttribute('aria-invalid', 'true'); msgEl.textContent = text; msgEl.className = 'msg error'; };
-    const isFilled = () => u.value.trim().length > 0 && p.value.length >= 6;
+      function validate(){
+        btn.disabled = !(id.value.trim().length >= 3 && pw.value.trim().length >= 8);
+      }
+      id.addEventListener('input', validate);
+      pw.addEventListener('input', validate);
 
-    // Live validation
-    function validateUsername(){
-      if (u.value.trim().length === 0) { err(u, uMsg, 'Please enter a username, email, or phone.'); return false; }
-      ok(u, uMsg); return true;
-    }
-    function validatePassword(){
-      if (p.value.length < 6) { err(p, pMsg, 'Password must be at least 6 characters.'); return false; }
-      ok(p, pMsg); return true;
-    }
-    function updateButton(){ submitBtn.disabled = !isFilled(); }
-
-    u.addEventListener('input', () => { validateUsername(); updateButton(); });
-    p.addEventListener('input', () => { validatePassword(); updateButton(); });
-
-    // Toggle password visibility
-    togglePw.addEventListener('click', () => {
-      const showing = p.type === 'text';
-      p.type = showing ? 'password' : 'text';
-      togglePw.textContent = showing ? 'Show' : 'Hide';
-    });
-
-    // Submit (offline, safe)
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const valid = validateUsername() & validatePassword();
-      if (!valid) { formMsg.textContent = 'Fix the highlighted fields.'; formMsg.className = 'msg error'; return; }
-      const masked = p.value.replace(/./g, '•');
-      formMsg.textContent = '';
-      alert(`Demo submit!
-
-Username: ${u.value.trim()}
-Password: ${masked}
-
-This demo is offline and makes no network requests.`);
-      form.reset();
-      updateButton();
-      p.type = 'password';
-      togglePw.textContent = 'Show';
-      uMsg.textContent = pMsg.textContent = '';
-    });
-
-    // Initialize
-    updateButton();
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        // Replace with your auth call
+        btn.textContent = 'Signing in...';
+        setTimeout(()=>{ btn.textContent = 'Log in'; }, 800);
+      });
+    })();
   </script>
 </body>
 </html>
